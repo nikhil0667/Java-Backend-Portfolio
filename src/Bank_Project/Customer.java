@@ -1,20 +1,23 @@
 package Bank_Project;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 class Customer implements Serializable {
     private int accountNumber;
     private String accountHolder;
     private double balance;
     private String password;
-
     private boolean isApproved;
+    private List<Transaction> transactions = new ArrayList<>();
 
     public Customer(int accountNumber, String accountHolder, double balance, String password) {
         this.accountNumber = accountNumber;
         this.accountHolder = accountHolder;
         this.balance = balance;
         this.password = password;
+        this.isApproved = false;
     }
 
     public int getAccountNumber() {
@@ -28,10 +31,18 @@ class Customer implements Serializable {
     public void setAccountHolder(String accountHolder) {
         this.accountHolder = accountHolder;
     }
+
+    public double getBalance() {
+        return balance;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
     public void setPassword(String password) {
         this.password = password;
     }
-
 
     public boolean isApproved() {
         return isApproved;
@@ -41,29 +52,21 @@ class Customer implements Serializable {
         isApproved = approved;
     }
 
+    public List<Transaction> getTransactions() {
+        return transactions;
+    }
+
     public void deposit(double amount) {
         balance += amount;
-        System.out.println("Deposited: " + amount);
+        transactions.add(new Transaction("Deposit", amount));
     }
 
     public void withdraw(double amount) {
         if (balance >= amount) {
             balance -= amount;
-            System.out.println("Withdrawn: " + amount);
+            transactions.add(new Transaction("Withdraw", amount));
         } else {
-            System.out.println("Insufficient funds!");
+            throw new IllegalArgumentException("Insufficient funds");
         }
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void display() {
-        System.out.println("\nAccount Number: " + accountNumber);
-        System.out.println("Account Holder: " + accountHolder);
-        System.out.println("Balance: " + balance);
-        System.out.println("Approved: " + (isApproved ? "Yes" : "No"));
-
     }
 }
