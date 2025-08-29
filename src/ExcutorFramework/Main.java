@@ -1,55 +1,43 @@
 package ExcutorFramework;
 
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
+import java.util.concurrent.*;
 
 public class Main {
-    public static void main(String[] args) throws InterruptedException, ExecutionException {
-      ShareObject shareObject = new ShareObject();
-      Thread wrongThread = new Thread(shareObject::setFlag);
-      Thread rightThread = new Thread(shareObject::printFlag);
-      wrongThread.start();
-      rightThread.start();
-//        for (int i = 1; i <= 10; i++) {
-//            int fin = i;
-//            executorService.submit(() -> {
-//
-//                try {
-//                    System.out.println(factorail(fin));
-//                } catch (InterruptedException e) {
-//                    throw new RuntimeException(e);
-//                }
-//
-//            });
-//          }
-//        executorService.shutdown();
-//
-//        System.out.println("Time taken: " + (System.currentTimeMillis() - startTime) + " ms");
+
+    public static void main(String[] args) throws ExecutionException, InterruptedException {
+        long startTime = System.currentTimeMillis();
+        ExecutorService executorService = Executors.newFixedThreadPool(9);
+        for (int i = 1; i < 10; i++) {
+
+            int finalI = i;
+          Future<?> future = executorService.submit(() -> System.out.println(
+                    finalI + " :- " + fact(finalI)));
+            System.out.println("H : - "+future.get());
+        }
+        executorService.shutdown();
+        try {
+            while (!executorService.awaitTermination(1, TimeUnit.SECONDS)) {
+                System.out.println("Waiting for termination");
+            }
+        } catch (InterruptedException e) {
+            throw new RuntimeException(
+                    e);
+        }
+        System.out.println("Total Time :- " + (System.currentTimeMillis() - startTime));
     }
 
-    private static int factorail(int i) throws InterruptedException {
-        Thread.sleep(2000);
+    public static int fact(int n) {
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
         int result = 1;
-        if (i == 0) {
-            return result;
-        } else {
-            for (int j = 1; j <= i; j++) {
-                result *= j;
-            }
+        for (int i = 1; i <= n; i++) {
+            result *= i;
+
         }
         return result;
     }
-}
-class ShareObject{
-    private boolean isFlag = false;
-    public  void setFlag(){
-        this.isFlag = true;
-    }
-    public  void printFlag() {
-        while (!isFlag) {
-        }
-        System.out.println("Flag is set");
-    }
+
 }
