@@ -1,3 +1,6 @@
+/**
+ * The class demonstrates the use of StringBuilder, StringBuffer, and Thread in Java to manipulate strings concurrently.
+ */
 package Common_Question;
 
 public class String_string_buffer_string_builder {
@@ -20,8 +23,7 @@ public class String_string_buffer_string_builder {
             t1.join();
             t2.join();
 
-            System.out.println("Final length "+sb.length(
-
+            System.out.println("Final length " + sb.length(
 
             ));
         } catch (InterruptedException e) {
@@ -39,8 +41,8 @@ class Task extends Thread {
 
     @Override
     public void run() {
-    for(int i = 0;i<1000;i++){
-        sb.append("a");
-    }
+        for (int i = 0; i < 1000; i++) {
+            sb.append("a");
+        }
     }
 }
